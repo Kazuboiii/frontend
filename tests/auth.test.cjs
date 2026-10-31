@@ -88,3 +88,14 @@ test('a rejected retry ends the session without a refresh loop', async () => {
   assert.equal(refreshes, 1);
   assert.equal(c.storage.has('access_token'), false);
 });
+
+test('role selection ignores a stale session from another server', async () => {
+  const c = load({}, { access_token: 'old', refresh_token: 'old-refresh', auth_api_base: 'https://old.example/api/v1' });
+  c.clients[0].defaults.adapter = async config => {
+    assert.equal(config.headers.Authorization, undefined);
+    return ok(config, { access: 'role-token' });
+  };
+  const result = await c.api.post('/auth/role-login/', { role: 'employee' });
+  assert.equal(result.data.access, 'role-token');
+  assert.equal(c.window.location.href, '');
+});

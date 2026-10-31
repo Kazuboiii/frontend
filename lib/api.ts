@@ -49,7 +49,7 @@ function buildApiClient(baseURL: string) {
 
   api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
-    if (token && !["/auth/login/", "/auth/logout/", "/auth/refresh/"].includes(config.url ?? "")) {
+    if (token && !["/auth/login/", "/auth/role-login/", "/auth/logout/", "/auth/refresh/"].includes(config.url ?? "")) {
       if (localStorage.getItem("auth_api_base") !== baseURL) {
         endSession();
         throw new Error("The authentication server changed. Please sign in again.");
@@ -64,7 +64,7 @@ function buildApiClient(baseURL: string) {
     async (error: AxiosError) => {
       const config = error.config as (InternalAxiosRequestConfig & { retried?: boolean }) | undefined;
       if (error.response?.status !== 401 || !config || typeof window === "undefined" ||
-          ["/auth/login/", "/auth/logout/", "/auth/refresh/"].includes(config.url ?? "")) throw error;
+          ["/auth/login/", "/auth/role-login/", "/auth/logout/", "/auth/refresh/"].includes(config.url ?? "")) throw error;
       if (config.retried) { endSession(); throw error; }
       const refresh = localStorage.getItem("refresh_token");
       if (!refresh) { endSession(); throw error; }
