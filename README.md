@@ -34,3 +34,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## HOMS/UEMS project notes
+
+This frontend is the web UI for the HOMS/UEMS enterprise app. It is meant to talk to the deployed backend API.
+
+Environment variables:
+
+- `NEXT_PUBLIC_API_BASE_URL`
+  - Public backend URL the browser should use, for example `https://api.example.com/api/v1`.
+  - If the frontend and backend are served from the same domain, leave this empty and configure the same-origin proxy at build/deploy time instead.
+- `API_PROXY_TARGET`
+  - Used by `frontend/next.config.ts` when you want the browser to call the same origin and let the app proxy `/api/v1/*` to the backend.
+
+Do not store backend secrets in this frontend repository or in client environment variables.
+
+For the full deployment steps, see the repository root docs:
+
+- `docs/deployment-guide.md`
+- `docs/deployment-audit.md`
+- `docs/production-checklist.md`
